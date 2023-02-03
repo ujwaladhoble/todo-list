@@ -2,11 +2,10 @@ import React, {useState, useEffect} from 'react'
 import { Table,Button } from 'react-bootstrap';
 
 
-// to get the data from LS
+// To get the data
 
 const getLocalItmes = () => {
     let list = localStorage.getItem('lists');
-    console.log(list);
 
     if (list) {
         return JSON.parse(localStorage.getItem('lists'));
@@ -17,7 +16,7 @@ const getLocalItmes = () => {
 
 const Todo = () => {
 
-    const [inputData, setInputData] = useState([]);
+    const [inputData, setInputData] = useState('');
     const [items, setItems] = useState(getLocalItmes());
     const [toggleSubmit, setToggleSubmit] = useState(true);
     const [isEditItem, setIsEditItem] = useState(null);
@@ -57,13 +56,6 @@ const Todo = () => {
     }
 
 // edit the item
-//     When user clikc on edit button 
-
-// 1: get the id and name of the data which user clicked to edit
-// 2: set the toggle mode to change the submit button into edit button
-// 3: Now update the value of the setInput with the new updated value to edit. 
-// 4: To pass the current element Id to new state variable for reference 
-    
     
     const editItem = (id) => {
         let newEditItem = items.find((elem) => {
@@ -79,12 +71,6 @@ const Todo = () => {
 
     }
     
-
-    // remove all 
-    const removeAll = () => {
-         setItems([]);
-    }
-
     // add data to localStorage
     useEffect(() => {
        localStorage.setItem('lists', JSON.stringify(items))
@@ -95,7 +81,6 @@ const Todo = () => {
         const value = event.target.value;
         setInputData(values => ({...values, [name]: value}))
       }
-    
 
     return (
         <>
@@ -124,6 +109,12 @@ const Todo = () => {
                         }
                        
                     </div>
+                    <select name="todo" onChange={handleChange} value="0">
+                        <option value="0">Filter to-do by name</option>
+                       {items.map((elem)=>{return(
+                           <option key={inputData.id} value={inputData.id}> {elem.name}</option>
+                        )})}
+                    </select>
 
                     <div className="showItems">
                         <Table className="table table-striped">
@@ -139,8 +130,7 @@ const Todo = () => {
                         {
                             items.map((elem) => {
                                 return (
-                                    // <div className="eachItem" key={elem.id}>
-                                        <tr>
+                                        <tr key={elem.id}>
                                         <td>{elem.name}</td>
                                         <td>{elem.date}</td>
                                         <td>{elem.age}</td>
@@ -149,7 +139,6 @@ const Todo = () => {
                                             <Button className='btn btn-danger' onClick={() => deleteItem(elem.id)}>Delete</Button>
                                         </div></td>
                                         </tr>
-                                //   </div>
                                 )
                             })
 
